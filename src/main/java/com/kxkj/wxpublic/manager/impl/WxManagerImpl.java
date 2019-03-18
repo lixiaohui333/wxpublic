@@ -2,6 +2,7 @@ package com.kxkj.wxpublic.manager.impl;
 
 import com.kxkj.wxpublic.conf.ApiPath;
 import com.kxkj.wxpublic.conf.Constants;
+import com.kxkj.wxpublic.conf.MsgEventType;
 import com.kxkj.wxpublic.conf.MyConfig;
 import com.kxkj.wxpublic.domain.AccessToken;
 import com.kxkj.wxpublic.domain.form.WxStartForm;
@@ -70,9 +71,10 @@ public class WxManagerImpl implements WxManager {
 
 
         WxMenuBean.ButtonBean btn2=new WxMenuBean.ButtonBean();
-        btn2.setName("会议新闻");
-        btn2.setType("view");
-        btn2.setUrl("https://www.jingyuhuodong.com/");
+        btn2.setName("用户信息");
+        btn2.setType("click");
+        btn2.setKey(MsgEventType.USERINFO.toString());
+
 
         WxMenuBean.ButtonBean btn3=new WxMenuBean.ButtonBean();
         btn3.setName("鲸鱼管家");
@@ -82,7 +84,7 @@ public class WxManagerImpl implements WxManager {
 
         subBtn1.setName("我的电子票");
         subBtn1.setType("click");
-        subBtn1.setKey("wx_click_myticket");
+        subBtn1.setKey(MsgEventType.MY_TICKET.toString());
 
 
         WxMenuBean.ButtonBean subBtn2=new WxMenuBean.ButtonBean();
@@ -120,11 +122,35 @@ public class WxManagerImpl implements WxManager {
         }
 
         switch (bean.getMsgType()){
+           case "text":
+            System.out.println("----msgtype = text-----");
+
+           case "event":
+            System.out.println("----msgtype = event-----");
+            handleMsgByEvent(bean);
+
+
+
 
         }
 
 
         return null;
+    }
+
+    private void handleMsgByEvent(WxMessageAllEntity bean) {
+
+        String eventKey = bean.getEventKey();
+
+        if(eventKey.equals(MsgEventType.USERINFO.toString())){
+
+            String url =  String.format(ApiPath.WX_GET_USERINFO,MyConfig.ACCESSTOKEN.getAccess_token(),bean.getFromUserName());
+            String result = JsoupHelper.get(url, null, null);
+            System.out.println(result);
+
+        }
+
+
     }
 
 

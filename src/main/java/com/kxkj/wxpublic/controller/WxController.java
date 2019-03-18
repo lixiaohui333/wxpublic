@@ -3,12 +3,13 @@ package com.kxkj.wxpublic.controller;
 
 import com.kxkj.wxpublic.domain.form.WxStartForm;
 import com.kxkj.wxpublic.domain.wx.WxMessageAllEntity;
-import com.kxkj.wxpublic.manager.HelloManager;
 import com.kxkj.wxpublic.manager.WxManager;
 import com.kxkj.wxpublic.utils.xml.XmlUtil;
-import com.kxkj.wxpublic.utils.xml.XmlUtil2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /*
  * 测试类
@@ -34,22 +35,29 @@ public class WxController {
     }
 
 
+
     @RequestMapping(value = "/wx/start",method = RequestMethod.POST)
     public Object wxRequest(@RequestBody String body){
 
         System.out.println("----RequestMapping POST-----");
         System.out.println(body);
 
-//        WxMessageAllEntity bean = XmlUtil.xmlToBean(body, WxMessageAllEntity.class);
-        WxMessageAllEntity xmlDomain = XmlUtil2.toXmlDomain(body);
-        System.out.println(xmlDomain);
+        WxMessageAllEntity xmlDomain = XmlUtil.toXmlDomain(body);
+        String result= wxManager.handleMsg(xmlDomain);
 
-//        if(xmlbean instanceof WxMessageAllEntity){
-            String result= wxManager.handleMsg(xmlDomain);
-//        }
 
-//
+        return "success";
+    }
 
+
+    @RequestMapping(value = "/wx/userinfo",method = RequestMethod.POST)
+    public Object wxLogin(@RequestBody String body){
+
+        System.out.println("----RequestMapping POST-----");
+        System.out.println(body);
+
+//        WxMessageAllEntity xmlDomain = XmlUtil.toXmlDomain(body);
+//        String result= wxManager.handleMsg(xmlDomain);
 
 
         return "success";

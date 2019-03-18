@@ -10,4 +10,8 @@ public class ApiPath {
     public static final String WX_SET_MEUN=WX_BASE_URL+"cgi-bin/menu/create?access_token=%s";
 
 
+    public static final String WX_GET_USERINFO=WX_BASE_URL+"cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN";
+//    public static final String WX_GET_USERINFO=WX_BASE_URL+"connect/oauth2/authorize?appid=%s&redirect_uri=%s";
+
+
 }

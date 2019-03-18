@@ -1,16 +1,20 @@
 package com.kxkj.wxpublic.controller;
 
 
+import com.kxkj.wxpublic.domain.wx.WxMessageAllEntity;
 import com.kxkj.wxpublic.manager.HelloManager;
 import com.kxkj.wxpublic.manager.WxManager;
+import com.kxkj.wxpublic.utils.xml.XmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /*
 * 测试类
 * */
-@RestController
+@Controller
 public class HelloController {
 
     @Autowired
@@ -21,14 +25,26 @@ public class HelloController {
     WxManager wxManager;
 
     @RequestMapping("/hello")
-    public String hello(){
+    public @ResponseBody String hello(){
         System.out.println("RequestMapping:hello");
         return "hotload hello wxpublic "+helloManager.findRandomStr();
     }
 
 
+    @RequestMapping("/jsp")
+    public ModelAndView hellojsp(){
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("name","lxh");
+        modelAndView.setViewName("hello");
+
+
+        return modelAndView;
+    }
+
+
     @RequestMapping("/getToken")
-    public String getToken(){
+    public @ResponseBody String getToken(){
         wxManager.getAccessToken();
         return "ok";
     }
@@ -36,8 +52,37 @@ public class HelloController {
 
 
     @RequestMapping("/menu")
-    public String menu(){
+    public @ResponseBody String menu(){
         wxManager.setWxMenu();
+        return "ok";
+    }
+
+    @RequestMapping("/testxml")
+    public @ResponseBody String testxml(){
+
+        String xmlStr="<xml><ToUserName><![CDATA[gh_ff431504bf4c]]></ToUserName>\n" +
+                "<FromUserName><![CDATA[ogN8twZQLrUyfFJxeOS_1xFLOBo8]]></FromUserName>\n" +
+                "<CreateTime>1552641656</CreateTime>\n" +
+                "<MsgType><![CDATA[text]]></MsgType>\n" +
+                "<Content><![CDATA[发发发]]></Content>\n" +
+                "<MsgId>22228486582347301</MsgId>\n" +
+                "</xml>";
+
+
+        WxMessageAllEntity xmlbean = XmlUtil.toBean(WxMessageAllEntity.class,xmlStr);
+
+        if(xmlbean instanceof WxMessageAllEntity ){
+
+            System.out.println("----instanceof-----");
+        }
+
+
+
+
+        System.out.println(xmlbean);
+
+
+
         return "ok";
     }
 }

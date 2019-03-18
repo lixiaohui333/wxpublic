@@ -68,9 +68,9 @@
 
         <!-- sqlservice的依赖 -->
         <!--<dependency>-->
-            <!--<groupId>com.microsoft.sqlserver</groupId>-->
-            <!--<artifactId>mssql-jdbc</artifactId>-->
-            <!--<scope>runtime</scope>-->
+        <!--<groupId>com.microsoft.sqlserver</groupId>-->
+        <!--<artifactId>mssql-jdbc</artifactId>-->
+        <!--<scope>runtime</scope>-->
         <!--</dependency>-->
 
         <dependency>
@@ -109,8 +109,30 @@
         </dependency>
 
 
+        <!--支持jsp-->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
 
 
     </dependencies>

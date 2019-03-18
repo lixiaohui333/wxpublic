@@ -58,6 +58,8 @@ public class JsoupHelper {
 
     private static String dohttp(String url, Map<String, String> params,
                                  Map<String, String> headers, Connection.Method method) {
+
+        System.out.println(url);
         String result = "";
         try {
             Connection conn = getConnection(url, params, headers);

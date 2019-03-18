@@ -1,29 +1,36 @@
 package com.kxkj.wxpublic.utils.xml;
 
+import com.kxkj.wxpublic.WxpublicApplication;
+import com.kxkj.wxpublic.domain.wx.WxMessageAllEntity;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import org.springframework.context.ApplicationContext;
 
 import java.io.Writer;
+import java.lang.reflect.Field;
 
 public class XmlUtil {
-
-
-    //xstream扩展,bean转xml自动加上![CDATA[]]
-    public static XStream getMyXStream() {
+    public static XStream createXstream() {
         return new XStream(new XppDriver() {
             @Override
             public HierarchicalStreamWriter createWriter(Writer out) {
                 return new PrettyPrintWriter(out) {
-                    // 对所有xml节点都增加CDATA标记
-                    boolean cdata = true;
+                    boolean cdata = false;
+                    Class<?> targetClass = null;
 
                     @Override
-                    public void startNode(String name, Class clazz) {
+                    public void startNode(String name, @SuppressWarnings("rawtypes") Class clazz) {
                         super.startNode(name, clazz);
+                        // 业务处理，对于用XStreamCDATA标记的Field，需要加上CDATA标签
+                        if (!name.equals("xml")) {
+                            cdata = needCDATA(targetClass, name);
+                        } else {
+                            targetClass = clazz;
+                        }
                     }
 
                     @Override
@@ -41,22 +48,80 @@ public class XmlUtil {
         });
     }
 
-
-    public static <T> T xmlToBean(String resultXml, Class clazz) {
-        // XStream对象设置默认安全防护，同时设置允许的类
-        XStream stream = new XStream(new DomDriver());
-        XStream.setupDefaultSecurity(stream);
-        stream.autodetectAnnotations(true);//自动探测注解
-        stream.ignoreUnknownElements();//忽略未知元素
-
-        stream.allowTypes(new Class[]{clazz});
-        stream.processAnnotations(new Class[]{clazz});
-//        stream.setMode(XStream.NO_REFERENCES);
-        stream.alias("xml", clazz);
-        return (T) stream.fromXML(resultXml);
-
-       //??
+    private static boolean needCDATA(Class<?> targetClass, String fieldAlias) {
+        boolean cdata = false;
+        // first, scan self
+        cdata = existsCDATA(targetClass, fieldAlias);
+        if (cdata)
+            return cdata;
+        // if cdata is false, scan supperClass until java.lang.Object
+        Class<?> superClass = targetClass.getSuperclass();
+        while (!superClass.equals(Object.class)) {
+            cdata = existsCDATA(superClass, fieldAlias);
+            if (cdata)
+                return cdata;
+            superClass = superClass.getClass().getSuperclass();
+        }
+        return false;
     }
 
+    private static boolean existsCDATA(Class<?> clazz, String fieldAlias) {
+        if ("MediaId".equals(fieldAlias)) {
+            return true; // 特例添加 morning99
+        }
+        // scan fields
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            // 1. exists XStreamCDATA
+            if (field.getAnnotation(XStreamCDATA.class) != null) {
+                XStreamAlias xStreamAlias = field.getAnnotation(XStreamAlias.class);
+                // 2. exists XStreamAlias
+                if (null != xStreamAlias) {
+                    if (fieldAlias.equals(xStreamAlias.value()))// matched
+                        return true;
+                } else {// not exists XStreamAlias
+                    if (fieldAlias.equals(field.getName()))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public static WxMessageAllEntity toXmlDomain(String xmlStr){
+
+        WxMessageAllEntity xmlbean = null;
+        try {
+            XStream xstream = createXstream();
+            xstream.processAnnotations(WxMessageAllEntity.class);
+            xstream.alias("xml",WxMessageAllEntity.class);
+            xstream.setClassLoader(WxpublicApplication.class.getClassLoader());
+            xmlbean = (WxMessageAllEntity) xstream.fromXML(xmlStr);
+        } catch (Exception e) {
+            throw new RuntimeException("[XStream]XML转WxMessageAllEntity出错");
+        }
+
+
+        return xmlbean;
+    }
+
+
+
+    public static <T> T toBean(Class<T> clazz, String xml) {
+        try {
+            XStream xstream =  createXstream();
+            xstream.processAnnotations(clazz);
+            xstream.alias("xml",clazz);
+            xstream.autodetectAnnotations(true);
+            xstream.setClassLoader(WxpublicApplication.class.getClassLoader());
+            return (T) xstream.fromXML(xml);
+        } catch (Exception e) {
+//            log.error("[XStream]XML转对象出错:{}", e.getCause());
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
+            throw new RuntimeException("[XStream]XML转对象出错");
+        }
+    }
 
 }
