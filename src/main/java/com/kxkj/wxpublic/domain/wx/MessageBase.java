@@ -15,6 +15,7 @@ public class MessageBase extends ToString {
     // this.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000L));
     @XStreamAlias("CreateTime")
     private String createTime;
+
     @XStreamAlias("MsgType")
     private String msgType;
 

@@ -2,6 +2,8 @@ package com.kxkj.wxpublic.xml;
 
 import com.kxkj.wxpublic.domain.wx.WxMessageAllEntity;
 import com.kxkj.wxpublic.utils.xml.XmlUtil;
+import com.kxkj.wxpublic.utils.xml.XmlUtil2;
+import com.thoughtworks.xstream.XStream;
 import org.junit.Test;
 
 public class TestXml {
@@ -19,9 +21,16 @@ public class TestXml {
                 "</xml>";
 
 //        XmlUtil.getMyXStream();
-        WxMessageAllEntity xmlbean = XmlUtil.xmlToBean(xmlStr, WxMessageAllEntity.class);
+//        WxMessageAllEntity xmlbean = XmlUtil.xmlToBean(xmlStr, WxMessageAllEntity.class);
+//        XStream xstream = XmlUtil2.createXstream();
+//        xstream.processAnnotations(WxMessageAllEntity.class);
+//        xstream.alias("xml",WxMessageAllEntity.class);
+//        WxMessageAllEntity xmlbean = (WxMessageAllEntity) xstream.fromXML(xmlStr);
 
-        System.out.println(xmlbean);
+        WxMessageAllEntity xmlDomain = XmlUtil2.toXmlDomain(xmlStr);
+
+
+        System.out.println(xmlDomain);
 
     }
 }

@@ -113,7 +113,7 @@ public class WxManagerImpl implements WxManager {
     @Override
     public String handleMsg(WxMessageAllEntity bean) {
 
-        System.out.println(bean);
+        System.out.println(bean.toString());
 
         if (bean==null){
             return null;

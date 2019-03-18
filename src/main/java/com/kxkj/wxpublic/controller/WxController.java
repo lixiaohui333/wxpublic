@@ -6,6 +6,7 @@ import com.kxkj.wxpublic.domain.wx.WxMessageAllEntity;
 import com.kxkj.wxpublic.manager.HelloManager;
 import com.kxkj.wxpublic.manager.WxManager;
 import com.kxkj.wxpublic.utils.xml.XmlUtil;
+import com.kxkj.wxpublic.utils.xml.XmlUtil2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,9 +41,14 @@ public class WxController {
         System.out.println(body);
 
 //        WxMessageAllEntity bean = XmlUtil.xmlToBean(body, WxMessageAllEntity.class);
-        WxMessageAllEntity xmlbean = XmlUtil.xmlToBean(body, WxMessageAllEntity.class);
+        WxMessageAllEntity xmlDomain = XmlUtil2.toXmlDomain(body);
+        System.out.println(xmlDomain);
 
-//       String result= wxManager.handleMsg(bean);
+//        if(xmlbean instanceof WxMessageAllEntity){
+            String result= wxManager.handleMsg(xmlDomain);
+//        }
+
+//
 
 
 

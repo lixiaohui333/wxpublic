@@ -2,8 +2,13 @@ package com.kxkj.wxpublic.domain.wx;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-public class WxMessageAllEntity extends MessageBase{
+public class WxMessageAllEntity extends MessageBase {
 
+
+
+
+    @XStreamAlias("MsgId")
+    private Long MsgId;
 
     @XStreamAlias("Event")
     private String Event;
@@ -15,10 +20,6 @@ public class WxMessageAllEntity extends MessageBase{
     @XStreamAlias("Content")
     private String Content;
 
-    @XStreamAlias("MsgType")
-    private String MsgType = "text";
-    @XStreamAlias("MsgId")
-    private Long MsgId;
     // 图片消息
     @XStreamAlias("PicUrl")
     private String PicUrl;
@@ -50,13 +51,13 @@ public class WxMessageAllEntity extends MessageBase{
     private String Ticket;
 
 
+    public Long getMsgId() {
+        return MsgId;
+    }
 
-
-
-
-
-
-
+    public void setMsgId(Long msgId) {
+        MsgId = msgId;
+    }
 
     public String getEvent() {
         return Event;
@@ -74,24 +75,12 @@ public class WxMessageAllEntity extends MessageBase{
         EventKey = eventKey;
     }
 
-
-
-    @Override
-    public String getMsgType() {
-        return MsgType;
+    public String getContent() {
+        return Content;
     }
 
-    @Override
-    public void setMsgType(String msgType) {
-        MsgType = msgType;
-    }
-
-    public Long getMsgId() {
-        return MsgId;
-    }
-
-    public void setMsgId(Long msgId) {
-        MsgId = msgId;
+    public void setContent(String content) {
+        Content = content;
     }
 
     public String getPicUrl() {
