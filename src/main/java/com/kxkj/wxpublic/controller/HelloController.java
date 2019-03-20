@@ -1,6 +1,10 @@
 package com.kxkj.wxpublic.controller;
 
 
+import com.kxkj.wxpublic.dao.ThirdDao;
+import com.kxkj.wxpublic.dao.mapper.ThirdPlatformInfoDoMapper;
+import com.kxkj.wxpublic.dao.model.ThirdPlatformInfoDo;
+import com.kxkj.wxpublic.dao.model.ThirdPlatformInfoDoExample;
 import com.kxkj.wxpublic.domain.wx.WxMessageAllEntity;
 import com.kxkj.wxpublic.manager.HelloManager;
 import com.kxkj.wxpublic.manager.WxManager;
@@ -11,11 +15,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 /*
 * 测试类
 * */
 @Controller
 public class HelloController {
+
+//    @Autowired
+//    ThirdDao thirdDao;
+
+    @Autowired
+    ThirdPlatformInfoDoMapper thirdPlatformInfoDoMapper;
+
+
+//    public List<ThirdPlatformInfoDo> findall(){
+//
+//        return  thirdPlatformInfoDoMapper.selectByExample(new ThirdPlatformInfoDoExample());
+//    }
+//
 
     @Autowired
     HelloManager helloManager;
@@ -50,6 +69,15 @@ public class HelloController {
     }
 
 
+
+    @RequestMapping("/testdb")
+    public @ResponseBody List<ThirdPlatformInfoDo> testdb(){
+
+        List<ThirdPlatformInfoDo> areaDo = thirdPlatformInfoDoMapper.selectByExample(new ThirdPlatformInfoDoExample());
+
+
+        return areaDo;
+    }
 
     @RequestMapping("/menu")
     public @ResponseBody String menu(){

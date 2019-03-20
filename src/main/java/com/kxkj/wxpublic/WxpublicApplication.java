@@ -1,12 +1,14 @@
 package com.kxkj.wxpublic;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-@SpringBootApplication(exclude= DataSourceAutoConfiguration.class)
+@SpringBootApplication
+@MapperScan("com.kxkj.wxpublic.dao.mapper")
 public class WxpublicApplication {
 
     public static void main(String[] args) {

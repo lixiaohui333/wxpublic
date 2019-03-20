@@ -1,0 +1,35 @@
+#server.port=80
+#server.session-timeout=1800 # session timeout in seconds
+
+server:
+  port: 80
+  servlet:
+    session:
+      timeout: 60
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/moreletter?useUnicode=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    name: root
+    password: root
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    static-path-pattern: /static/**
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  #  扫描数据持久对应的实体类 路径 Package级别
+  type-aliases-package: com.kxkj.wxpublic.dao.model
+#  mybatis 对应的 .xml文件路径
+  mapper-locations: classpath:mapper/*.xml
+
+context:
+  listener:
+    classes: com.kxkj.wxpublic.springboot.ApplicationEventListener
+
+
+
